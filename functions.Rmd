@@ -1,0 +1,116 @@
+---
+title: "Function"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+My forst function
+```{r}
+x_vec = rnorm(25, mean = 5, sd = 3)
+(x_vec - mean(x_vec)) / sd(x_vec)
+
+z_score = function(x) {
+  z = (x - mean(x)) / sd(x)
+  z
+}
+
+z_score(x_vec)
+```
+what the fucntion can;t do
+```{r}
+z_score(3)
+z_scores("my name is jeff")
+z_score(c(TRUE, FALSE, TRUE, TRUE))
+```
+TRUE AND FALSE statementas are logical, R calcualting it as 1 and 0s. We dont wnat that. SO we need to fix the funtion iwth a conditional command, 
+```{r}
+x_vec = rnorm(25, mean = 5, sd = 3)
+(x_vec - mean(x_vec)) / sd(x_vec)
+
+z_score = function(x) {
+  if (!is.numeric(x)) {
+    stop("Argument must be numeric") } 
+  else if (length(x) == 1) {
+    stop("Z scores cannot be computed for length 1 vectors")  
+    }
+  z = (x - mean(x)) / sd(x)
+  z
+}
+
+z_score(3)
+z_scores("my name is jeff")
+z_score(c(TRUE, FALSE, TRUE, TRUE))
+```
+Now the above command are sjhowing errors.
+
+##Multiple outputs
+
+```{r}
+mean_and_sd = function(x) {
+  if (!is.numeric(x)) {
+    stop("Argument must be numeric") } 
+  else if (length(x) == 1) {
+    stop("Z scores cannot be computed for length 1 vectors")  
+    }
+  mean_x = mean(x)
+  sd_x = sd(x)
+  
+  tibble(
+    mean = mean_x,
+    sd = sd_x
+  )
+}
+```
+
+```{r}
+x_vec = rnorm(100)
+mean_and_sd(x_vec)
+```
+It works!
+
+
+## Multiple inputs
+Now we are going to incoportae the rnorm into the function
+```{r}
+sim_data <- 
+  tibble(
+    x = rnorm(100, mean = 4, sd = 3)
+  )
+
+sim_data %>% 
+  summarize(
+    mean = mean(x),
+    sd = sd(x)
+  )
+
+
+```
+
+now a function taht does the same thing
+```{r}
+
+sim_mean_sd = function(samp_size, mu, sigma){
+  sim_data <- 
+  tibble(
+    x = rnorm(n = samp_size, mean = mu, sd = sigma)
+  )
+
+sim_data %>% 
+  summarize(
+    mean = mean(x),
+    sd = sd(x)
+  )
+}
+
+sim_mean_sd(100, 6, 3)
+sim_mean_sd(samp_size = 100, mu = 6, sigma = 3)
+```
+here the fucntion is using assumptionn of positional matching.We can aslo use named macthing. 
+
+
+
+
+
